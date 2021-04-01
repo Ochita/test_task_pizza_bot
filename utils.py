@@ -36,6 +36,6 @@ def processed_message(func):
     """
     def wrapper(message, *args, **kwargs):
         processed = message.translate(str.maketrans('', '', string.punctuation)).lower()
-        end_cut = processed[:2] if len(processed) > 4 else processed
+        end_cut = processed[:-2] if len(processed) > 5 else processed
         return func(end_cut, *args, **kwargs)
     return wrapper
