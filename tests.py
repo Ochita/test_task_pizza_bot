@@ -1,11 +1,24 @@
 import unittest
+from order import get_order_state_machine
+from communication import parse_dictionary_option, parse_yes_no_option
+from utils import get_respond_mapper, processed_message
 
-# class TestWallet(unittest.TestCase):
-#     def test_init(self):
-#         key = get_random_string()
-#         secret = get_random_string()
-#         url = get_random_string(uppercase=False, alphanum=False, length=16)
-#         wallet = Wallet(key, secret, url=url)
-#         self.assertEqual(wallet.key, key)
-#         self.assertEqual(wallet.secret.decode(u'utf-8'), secret)
-#         self.assertEqual(wallet.url, url)
+
+class TestUtils(unittest.TestCase):
+    def test_mapper(self):
+        pass
+
+    def test_processing(self):
+        pass
+
+
+class TestCommunications(unittest.TestCase):
+    def test_parse_option(self):
+        pass
+
+    def test_parse_yes_no(self):
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()
