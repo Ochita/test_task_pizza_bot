@@ -22,7 +22,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual('тест', result)
 
     def test_processing_junk(self):
-        result = processing_return('!!!тестец!!!')
+        result = processing_return('!,!тестец!.!')
         self.assertEqual('тест', result)
 
     def test_processing_lot_arguments(self):
