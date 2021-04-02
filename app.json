@@ -1,0 +1,21 @@
+{
+  "name": "Pizza Telegram bot",
+  "description": "test project",
+  "image": "heroku/python",
+  "repository": "TODO fill",
+  "keywords": ["python", "telegram" ],
+  "addons": [],
+  "env": {
+    "API_KEY": {
+      "description": "Bot key from telegram",
+      "value": "fill?"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "python test.py"
+      }
+    }
+  }
+}

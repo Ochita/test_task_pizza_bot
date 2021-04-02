@@ -1,0 +1,5 @@
+transitions==0.8.7
+python-telegram-bot==13.4.1
+python-Levenshtein==0.12.2
+fuzzywuzzy==0.18.0
+mock==4.0.3
