@@ -22,7 +22,7 @@ def parse_dictionary_option(message):
     message -- сообщение из одного слова без окончания
     """
     option, score = process.extractOne(message, dictionary)
-    if score > 69:
+    if score > 60:
         return option
 
 
@@ -85,7 +85,7 @@ def handle_message(session_id, message, responder):
             del orders[session_id]
             was_deleted = True
         if re_ask:
-            responder('Я вас не понял. Попробуйте ответить еще раз.')
+            responder('Я вас не понял. Попробуйте ответить еще раз.')  # TODO вынести в константы тут и следующий
     if machine is None or was_deleted:
         responder('Что бы начать заказ введите /start')
 

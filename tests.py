@@ -1,4 +1,5 @@
 import unittest
+import itertools
 from mock import Mock
 from order import STATES
 from validators import SIZE_OPTIONS, PAYMENT_OPTIONS
@@ -34,10 +35,28 @@ class TestUtils(unittest.TestCase):
 
 class TestCommunications(unittest.TestCase):
     def test_parse_option(self):
-        pass
+        res = parse_dictionary_option('большая')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('большое')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('большые')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('большн')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('бльшая')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('бальшая')
+        self.assertEqual(SIZE_OPTIONS[0], res)
+        res = parse_dictionary_option('БолШущая')
+        self.assertEqual(SIZE_OPTIONS[0], res)
 
     def test_parse_yes_no(self):
-        pass
+        res = parse_yes_no_option('да')
+        self.assertEqual(True, res)
+        res = parse_yes_no_option('нет')
+        self.assertEqual(False, res)
+        res = parse_yes_no_option('отклаадр')
+        self.assertIsNone(res)
 
 
 class OrderMock:
@@ -92,6 +111,16 @@ class TestDialog(unittest.TestCase):
         handle_message(self.session_id, expected_order.size, self.responder)
         self.responder.assert_called_with(STATES[2]['on_enter_message'])
         handle_message(self.session_id, expected_order.payment, self.responder)
+
+    def test_dialog__small_card_re_ask(self):
+        start_order(self.session_id, self.responder)
+        expected_order = OrderMock(SIZE_OPTIONS[1], PAYMENT_OPTIONS[1])
+
+        self.responder.assert_called_with(STATES[1]['on_enter_message'])
+        handle_message(self.session_id, expected_order.size, self.responder)
+        self.responder.assert_called_with(STATES[2]['on_enter_message'])
+        handle_message(self.session_id, 'отклаадр', self.responder)
+        self.responder.assert_called_with('Я вас не понял. Попробуйте ответить еще раз.')
 
 
 if __name__ == '__main__':
