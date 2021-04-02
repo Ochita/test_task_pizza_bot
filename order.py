@@ -42,7 +42,7 @@ class Order(object):
         self.payment = None
 
     def confirm(self):
-        # post куданибудь заказа
+        # отправка заказа куданибудь на сервер
         print(f'Новый заказ {self.size} пицца, оплата {self.payment}')
 
 

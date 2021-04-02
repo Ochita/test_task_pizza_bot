@@ -1,6 +1,5 @@
 import unittest
-import itertools
-from mock import Mock
+from mock import Mock, patch
 from order import STATES
 from validators import SIZE_OPTIONS, PAYMENT_OPTIONS
 from communication import parse_dictionary_option, parse_yes_no_option, start_order, handle_message
@@ -12,9 +11,35 @@ def processing_return(message, *args, **kwargs):
     return message
 
 
+class OrderMock:
+    def __init__(self, size, payment):
+        self.size = size
+        self.payment = payment
+
+
 class TestUtils(unittest.TestCase):
-    def test_mapper(self):
-        pass
+    def setUp(self):
+        self.responder = Mock(return_value=None)
+
+    def test_mapper_str(self):
+        expected_order = OrderMock(SIZE_OPTIONS[0], PAYMENT_OPTIONS[0])
+        mapper = get_respond_mapper(self.responder, expected_order)
+        states = [{'name': 'test', 'on_enter_message': 'test_message'}]
+        new_state = list(map(mapper, states))[0]
+        self.assertEqual('test', new_state['name'])
+        self.assertIsNone(new_state.get('on_enter_message'))
+        new_state['on_enter']()
+        self.responder.assert_called_once_with('test_message')
+
+    def test_mapper_fun(self):
+        expected_order = OrderMock(SIZE_OPTIONS[1], PAYMENT_OPTIONS[1])
+        mapper = get_respond_mapper(self.responder, expected_order)
+        states = [{'name': 'test', 'on_enter_message': lambda order: f'{order.size}_{order.payment}'}]
+        new_state = list(map(mapper, states))[0]
+        self.assertEqual('test', new_state['name'])
+        self.assertIsNone(new_state.get('on_enter_message'))
+        new_state['on_enter']()
+        self.responder.assert_called_once_with(f'{expected_order.size}_{expected_order.payment}')
 
     def test_processing_short(self):
         result = processing_return('тест')
@@ -34,7 +59,7 @@ class TestUtils(unittest.TestCase):
 
 
 class TestCommunications(unittest.TestCase):
-    def test_parse_option(self):
+    def test_parse_option(self):  # TODO split tests
         res = parse_dictionary_option('большая')
         self.assertEqual(SIZE_OPTIONS[0], res)
         res = parse_dictionary_option('большое')
@@ -59,12 +84,7 @@ class TestCommunications(unittest.TestCase):
         self.assertIsNone(res)
 
 
-class OrderMock:
-    def __init__(self, size, payment):
-        self.size = size
-        self.payment = payment
-
-
+@patch('order.Order.confirm', Mock(return_value=None))  # что бы не дергать отправку на сервер в confirm
 class TestDialog(unittest.TestCase):
     def setUp(self):
         self.responder = Mock(return_value=None)
